@@ -14,13 +14,7 @@ class Login extends React.Component {
     };
   }
 
-  handlePhoneNumber = e => {
-    this.setState({
-      phone: e.target.value
-    });
-  };
-
-  onSubmit = async context => {
+  submit = async context => {
     const { phone } = this.state;
     const body = {
       phone
@@ -41,16 +35,23 @@ class Login extends React.Component {
               <div className={s.container}>
                 <Formik
                   initialValues={phone}
-                  onSubmit={() => this.onSubmit(context)}
+                  onSubmit={() => this.submit(context)}
                   validationSchema={validationSchema}
                 >
-                  {({ errors, touched }) => (
-                    <Form>
-                      <Field name="phone" validate={validationSchema} />
+                  {({ errors, touched, handleSubmit, handleBlur }) => (
+                    <Form onSubmit={handleSubmit}>
+                      <Field
+                        name="phone"
+                        placeholder="enter your phone number"
+                        onBlur={e => {
+                          handleBlur(e);
+                          this.setState({
+                            phone: e.target.value
+                          });
+                        }}
+                      />
                       {errors.phone && touched.phone && <p>{errors.phone}</p>}
-                      <p>
-                        <button type="submit">Submit</button>
-                      </p>
+                      <button type="submit">Send Code</button>
                     </Form>
                   )}
                 </Formik>
