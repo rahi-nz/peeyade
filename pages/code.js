@@ -1,9 +1,11 @@
 import React from "react";
 import Router from "next/router";
+import Link from "next/link";
 import { request } from "../request/request";
 import { Consumer } from "./storeContext";
 import s from "../scss/code.scss";
 import { coderPost, getCategory } from "../request/services";
+import { setCookie } from "../utils";
 
 class Verification extends React.Component {
   constructor(props) {
@@ -20,6 +22,10 @@ class Verification extends React.Component {
     });
   };
 
+  changePhone = () => {
+    Router.push("/login");
+  };
+
   submit = async (e, context) => {
     e.preventDefault();
     const { code } = this.state;
@@ -29,6 +35,15 @@ class Verification extends React.Component {
     };
     const resp = await request.post(coderPost, body);
     if (resp.data.meta.status === 200) {
+      await request.setHeader({
+        Authorization: `Bearer${resp.data.data.oAuth2.accessToken}`
+      });
+      await setCookie(
+        "Authorization",
+        `Bearer${resp.data.data.oAuth2.accessToken}`,
+        resp.data.data.oAuth2.expiresIn
+      );
+      await setCookie("refreshToken", resp.data.data.oAuth2.refreshToken);
       const list = await request.get(getCategory);
       context.changeList(list.data);
       Router.push("/list");
@@ -55,6 +70,9 @@ class Verification extends React.Component {
                     onChange={this.handleChange}
                   />
                   <button type="submit">Submit</button>
+                  <Link href="/login" as="/login">
+                    <a>change phone number</a>
+                  </Link>
                   {error && <p>{error}</p>}
                 </form>
               </div>

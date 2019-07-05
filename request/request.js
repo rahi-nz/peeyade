@@ -23,8 +23,8 @@ const serverRequestModifier = (req, res, next) => {
   // initialize request based server cookies
   const cookies = new Cookies(req.headers.cookie);
 
-  const accessToken = cookies.access_token
-    ? `Bearer ${cookies.access_token}`
+  const accessToken = cookies.accessToken
+    ? `Bearer ${cookies.accessToken}`
     : null; // default basic access token
 
   request.setHeader("Authorization", accessToken);

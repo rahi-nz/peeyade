@@ -22,15 +22,21 @@ class Login extends React.Component {
       phone
     };
     const resp = await request.post(phoneNumberPost, body);
-    console.log("resp:", resp);
-    if (resp.data.meta.status === 200) {
-      context.changeOtp(resp.data);
-      context.changeUser(phone);
-      Router.push("/code");
-    } else {
-      this.setState({
-        error: resp.data.notification.message
-      });
+    switch (resp.data.meta.status) {
+      case 200:
+        context.changeOtp(resp.data);
+        context.changeUser(phone);
+        Router.push("/code");
+        break;
+      case 208:
+        this.setState({
+          error: resp.data.meta.developerMessage
+        });
+        break;
+      default:
+        this.setState({
+          error: resp.data.notification.message
+        });
     }
   };
 
