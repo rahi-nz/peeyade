@@ -1,4 +1,5 @@
 import React from "react";
+import Router from "next/router";
 import { Formik, Form, Field } from "formik";
 import { request } from "../request/request";
 import { Consumer } from "./storeContext";
@@ -10,7 +11,8 @@ class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      phone: null
+      phone: null,
+      error: null
     };
   }
 
@@ -21,11 +23,19 @@ class Login extends React.Component {
     };
     const resp = await request.post(phoneNumberPost, body);
     console.log("resp:", resp);
-    context.changeOtp(resp.data);
+    if (resp.data.meta.status === 200) {
+      context.changeOtp(resp.data);
+      context.changeUser(phone);
+      Router.push("/code");
+    } else {
+      this.setState({
+        error: resp.data.notification.message
+      });
+    }
   };
 
   render() {
-    const { phone } = this.state;
+    const { phone, error } = this.state;
     return (
       <div>
         <Consumer>
@@ -38,8 +48,8 @@ class Login extends React.Component {
                   onSubmit={() => this.submit(context)}
                   validationSchema={validationSchema}
                 >
-                  {({ errors, touched, handleSubmit, handleBlur }) => (
-                    <Form onSubmit={handleSubmit}>
+                  {({ errors, touched, handleBlur }) => (
+                    <Form>
                       <Field
                         name="phone"
                         placeholder="enter your phone number"
@@ -52,6 +62,7 @@ class Login extends React.Component {
                       />
                       {errors.phone && touched.phone && <p>{errors.phone}</p>}
                       <button type="submit">Send Code</button>
+                      {error && <p>{error}</p>}
                     </Form>
                   )}
                 </Formik>

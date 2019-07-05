@@ -12,8 +12,11 @@ class StoreContextProvider extends Component {
     super(props);
     this.state = {
       user: null,
+      list: null,
       otp: {},
-      changeOtp: otp => this.setState({ otp })
+      changeOtp: otp => this.setState({ otp }),
+      changeUser: user => this.setState({ user }),
+      changeList: list => this.setState({ list })
     };
   }
 

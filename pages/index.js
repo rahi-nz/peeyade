@@ -5,8 +5,8 @@ import { Button } from "antd";
 export default () => (
   <ul>
     <li>
-      <Link href="/a" as="/a">
-        <a>a</a>
+      <Link href="/code" as="/code">
+        <a>code</a>
       </Link>
     </li>
     <li>

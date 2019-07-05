@@ -29,7 +29,6 @@ app.prepare().then(() => {
     if (req.url === "") {
       req.url = "/";
     }
-
     // default next js route server
     return handle(req, res);
   });
@@ -38,4 +37,12 @@ app.prepare().then(() => {
     if (err) throw err;
     console.log(`> Ready on http://localhost:${port}`); // eslint-disable-line
   });
+
+  // server.post("/loadKey", (req, res) => {
+  //   const { key } = req.body;
+  //   // Do whatever you need to do
+  //   const actualPage = "/";
+  //   const queryParams = { key };
+  //   next({ dev }).render(req, res, actualPage, queryParams);
+  // });
 });
