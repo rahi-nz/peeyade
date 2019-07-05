@@ -35,18 +35,14 @@ class Verification extends React.Component {
     };
     const resp = await request.post(coderPost, body);
     if (resp.data.meta.status === 200) {
-      await request.setHeader({
-        Authorization: `Bearer${resp.data.data.oAuth2.accessToken}`
-      });
-      await setCookie(
-        "Authorization",
-        `Bearer${resp.data.data.oAuth2.accessToken}`,
-        resp.data.data.oAuth2.expiresIn
-      );
-      await setCookie("refreshToken", resp.data.data.oAuth2.refreshToken);
       const list = await request.get(getCategory);
       context.changeList(list.data);
       Router.push("/list");
+      request.setHeader({
+        Authorization: `Bearer${resp.data.data.oAuth2.accessToken}`
+      });
+      setCookie("Authorization", `Bearer${resp.data.data.oAuth2.accessToken}`);
+      setCookie("refreshToken", resp.data.data.oAuth2.refreshToken);
     } else {
       this.setState({
         error: resp.data.notification.message
@@ -69,9 +65,9 @@ class Verification extends React.Component {
                     maxLength="4"
                     onChange={this.handleChange}
                   />
-                  <button type="submit">Submit</button>
+                  <button type="submit">ثبت</button>
                   <Link href="/login" as="/login">
-                    <a>change phone number</a>
+                    <a>تغییر شماره تماس</a>
                   </Link>
                   {error && <p>{error}</p>}
                 </form>

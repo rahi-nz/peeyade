@@ -24,7 +24,7 @@ class List extends React.Component {
             console.log("context:", context);
             return (
               <div className={s.container}>
-                <Table dataSource={context.list?.data} columns={columns} />;
+                <Table dataSource={context.list?.data} columns={columns} />
               </div>
             );
           }}

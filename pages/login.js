@@ -58,7 +58,7 @@ class Login extends React.Component {
                     <Form>
                       <Field
                         name="phone"
-                        placeholder="enter your phone number"
+                        placeholder="شماره موبایل"
                         onBlur={e => {
                           handleBlur(e);
                           this.setState({
@@ -67,7 +67,7 @@ class Login extends React.Component {
                         }}
                       />
                       {errors.phone && touched.phone && <p>{errors.phone}</p>}
-                      <button type="submit">Send Code</button>
+                      <button type="submit">ثبت</button>
                       {error && <p>{error}</p>}
                     </Form>
                   )}

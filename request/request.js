@@ -28,7 +28,6 @@ const serverRequestModifier = (req, res, next) => {
     : null; // default basic access token
 
   request.setHeader("Authorization", accessToken);
-  request.setHeader("Context", cookies.application_name || "P");
 
   next();
 };
