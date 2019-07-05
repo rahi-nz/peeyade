@@ -28,8 +28,6 @@ class Verification extends React.Component {
       code
     };
     const resp = await request.post(coderPost, body);
-    console.log("resp:", resp.data.notification.message);
-    console.log("resp:", resp.data.meta.status);
     if (resp.data.meta.status === 200) {
       const list = await request.get(getCategory);
       context.changeList(list.data);
