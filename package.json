@@ -2,13 +2,14 @@
   "name": "custom-server-express",
   "version": "1.0.0",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "babel-node server.js",
     "build": "next build",
-    "start": "cross-env NODE_ENV=production node server.js",
+    "start": "cross-env NODE_ENV=production babel-node server.js",
     "analyze": "ANALYZE=true yarn build"
   },
   "license": "UNLICENSED",
   "dependencies": {
+    "@babel/node": "^7.5.0",
     "@next/bundle-analyzer": "^8.1.0",
     "@zeit/next-css": "^1.0.1",
     "@zeit/next-sass": "^1.0.1",

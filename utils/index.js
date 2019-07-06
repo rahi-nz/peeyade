@@ -1,8 +1,8 @@
 import Cookies from "universal-cookie";
 
-export function setCookie(name, value) {
+export function setCookie(name, value, expire) {
   const cookies = new Cookies();
-  cookies.set(name, value, { expires: new Date(Date.now() + 2592000) });
+  cookies.set(name, value, { expires: new Date(expire) });
 }
 export function getCookie(name) {
   const cookies = new Cookies();

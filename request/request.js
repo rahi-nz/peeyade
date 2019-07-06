@@ -1,32 +1,37 @@
+import Cookies from "universal-cookie";
+
 const { create } = require("apisauce");
 
-const Cookies = require("universal-cookie");
-
 const baseURL = process.env.HOSTURL || "https://pydtest.com/api/web";
-
-// create login configs
-const loginConfig = {
-  Authorization: "Basic YnJvd3NlcjoxMjM0NTY=",
-  "Content-Type": "application/x-www-form-urlencoded"
-};
+// initialize request based server cookies
+const browserAccessToken = process.browser
+  ? new Cookies().get("accessToken")
+  : null;
 
 // create main request configs
-const request = create({
-  baseURL,
-  headers: {
-    "Content-Type": "application/json"
-  }
-});
+const request = (() => {
+  return create({
+    baseURL,
+    headers: {
+      "Content-Type": "application/json",
+      ...(process.browser && browserAccessToken
+        ? { Authorization: `Bearer ${browserAccessToken}` }
+        : {})
+    }
+  });
+})();
 
 // server middleware used to add required headers to request
 const serverRequestModifier = (req, res, next) => {
+  console.log("ServerReuqsstModifier:");
   // initialize request based server cookies
   const cookies = new Cookies(req.headers.cookie);
 
-  const accessToken = cookies.accessToken
+  const accessToken = cookies.get("accessToken")
     ? `Bearer ${cookies.accessToken}`
     : null; // default basic access token
 
+  console.log("accessToken:", accessToken);
   request.setHeader("Authorization", accessToken);
 
   next();
@@ -35,6 +40,5 @@ const serverRequestModifier = (req, res, next) => {
 module.exports = {
   request,
   serverRequestModifier,
-  loginConfig,
   baseURL
 };

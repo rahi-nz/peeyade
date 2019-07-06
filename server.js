@@ -1,6 +1,8 @@
 const express = require("express");
 const next = require("next");
+const Cookies = require("universal-cookie");
 const expressStaticGzip = require("express-static-gzip");
+const { serverRequestModifier } = require("./request/request");
 
 const port = parseInt(process.env.PORT, 10) || 3000;
 const dev = process.env.NODE_ENV !== "production";
@@ -18,6 +20,29 @@ app.prepare().then(() => {
       index: false
     })
   );
+
+  /**
+   * Check if the user has jwt, otherwise redirect to login
+   */
+  server.use("*", (req, res, nxt) => {
+    const cookies = new Cookies(req.headers.cookie);
+    const accessToken = cookies.get("accessToken");
+    const isLogin =
+      req.originalUrl.includes("login") || req.originalUrl.includes("code");
+    if (!accessToken && !isLogin) {
+      return res.redirect("/login");
+    }
+    if (accessToken && isLogin) {
+      return res.redirect("/");
+    }
+
+    return nxt();
+  });
+
+  /**
+   * Modify request file to be able to handle requests in server side
+   */
+  server.use("*", serverRequestModifier);
 
   server.get("*", (req, res) => {
     /**

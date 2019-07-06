@@ -1,0 +1,17 @@
+.table{
+  background: white;
+  margin: 70px auto 0;
+  padding: 20px;
+}
+.container {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  background: url('/static/login2.jpg') center center;
+  background-size: cover;
+  padding-left: 10%;
+  th {
+    background: #54beb8 !important;
+    color: #fff !important;
+  }
+}

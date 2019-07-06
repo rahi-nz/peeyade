@@ -4,7 +4,7 @@ import Link from "next/link";
 import { request } from "../request/request";
 import { Consumer } from "./storeContext";
 import s from "../scss/code.scss";
-import { coderPost, getCategory } from "../request/services";
+import { coderPost } from "../request/services";
 import { setCookie } from "../utils";
 
 class Verification extends React.Component {
@@ -34,15 +34,18 @@ class Verification extends React.Component {
       code
     };
     const resp = await request.post(coderPost, body);
-    if (resp.data.meta.status === 200) {
-      const list = await request.get(getCategory);
-      context.changeList(list.data);
-      Router.push("/list");
-      request.setHeader({
-        Authorization: `Bearer${resp.data.data.oAuth2.accessToken}`
-      });
-      setCookie("Authorization", `Bearer${resp.data.data.oAuth2.accessToken}`);
-      setCookie("refreshToken", resp.data.data.oAuth2.refreshToken);
+    if (resp.ok) {
+      Router.push("/");
+      setCookie(
+        "accessToken",
+        resp.data.data.oAuth2.accessToken,
+        resp.data.data.oAuth2.expiresIn
+      );
+      setCookie(
+        "refreshToken",
+        resp.data.data.oAuth2.refreshToken,
+        resp.data.data.oAuth2.expiresIn
+      );
     } else {
       this.setState({
         error: resp.data.notification.message
@@ -56,7 +59,6 @@ class Verification extends React.Component {
       <div>
         <Consumer>
           {context => {
-            console.log("context:", context);
             return (
               <div className={s.container}>
                 <form onSubmit={e => this.submit(e, context)}>
